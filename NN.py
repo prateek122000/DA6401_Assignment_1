@@ -334,69 +334,6 @@ def rmsprop_params_update(weights, biases, gradients_B, gradients_W, beta, eta, 
 
     return weights, biases, W_v, B_v
 
-'''def learning_params(hidden_layers,neuron,x_train,y_train,x_val,y_val,learning_algorithm,eta,epochs,batch_size,activation,init_method,L2_lamb,momentum=0.9 ,beta=0.9 ,beta1=0.9 ,beta2=0.99 ,epsilon=0.00001,loss="cross_entropy"):
-  count=1
-  predicted_y=[]
-  L=hidden_layers+1
-  neurons=[0]*(L)
-  for i in range(1,L):
-    neurons[i]=neuron
-  exp_y=one_hot_encoding(y_train)
-  exp_y_val=one_hot_encoding(y_val)
-  i
-  weights,biases,previous_updates_W,previous_updates_B=initialize_params(hidden_layers,neurons,init_method)
-  epoch_train_loss=[]
-  epoch_val_loss=[]
-  acc_val=[]
-  acc_train=[]
-  t=1
-  v_W = previous_updates_W.copy()
-  m_W = previous_updates_W.copy()
-  v_B = previous_updates_B.copy()
-  m_B = previous_updates_B.copy()
-  while count<=epochs:
-      for i in range(0,x_train.shape[1],batch_size):
-        mini_batch=x_train[:,i:i+batch_size]
-        if learning_algorithm=='nag':
-          W_look_ahead=weights-(beta)*previous_updates_W
-          B_look_ahead=biases-(beta)*previous_updates_B
-          output,post_act,pre_act=FeedForwardNetwork(W_look_ahead,B_look_ahead,L,mini_batch,activation)
-          gradients_W,gradients_B=BackPropogation(W_look_ahead,L,post_act,pre_act,exp_y[:,i:i+batch_size],output,activation,loss)
-          weights,biases,previous_updates_W,previous_updates_B=update_parameters_momentum(weights,biases, gradients_B,gradients_W, beta, previous_updates_W,previous_updates_B,eta,L,L2_lamb)
-        elif learning_algorithm=='nadam':
-          W_look_ahead=weights-(beta)*previous_updates_W
-          B_look_ahead=biases-(beta)*previous_updates_B
-          output,post_act,pre_act=FeedForwardNetwork(W_look_ahead,B_look_ahead,L,mini_batch,activation)
-          gradients_W,gradients_B=BackPropogation(W_look_ahead,L,post_act,pre_act,exp_y[:,i:i+batch_size],output,activation,loss)
-          weights,biases,m_W,m_B,v_W,v_B,t= update_parameters_adam(weights, biases, gradients_B,gradients_W,eta, m_W,m_B,v_W,v_B, t,L,L2_lamb,beta1,beta2,epsilon)
-        elif learning_algorithm=='momentum':
-            output,post_act,pre_act=FeedForwardNetwork(weights,biases,L,mini_batch,activation)
-            gradients_W,gradients_B=BackPropogation(weights,L,post_act,pre_act,exp_y[:,i:i+batch_size],output,activation,loss)
-            weights,biases,previous_updates_W,previous_updates_B=update_parameters_momentum(weights, biases, gradients_B,gradients_W, momentum, previous_updates_W,previous_updates_B,eta,L,L2_lamb)
-        elif learning_algorithm=='sgd':
-            output,post_act,pre_act=FeedForwardNetwork(weights,biases,L,mini_batch,activation)
-            gradients_W,gradients_B=BackPropogation(weights,L,post_act,pre_act,exp_y[:,i:i+batch_size],output,activation,loss)
-            weights,biases=sgd_params_update(weights,biases,gradients_W,gradients_B,eta,L,L2_lamb)
-        elif learning_algorithm=='adam':
-            output,post_act,pre_act=FeedForwardNetwork(weights,biases,L,mini_batch,activation)
-            gradients_W,gradients_B=BackPropogation(weights,L,post_act,pre_act,exp_y[:,i:i+batch_size],output,activation,loss)
-            weights,biases,m_W,m_B,v_W,v_B,t= update_parameters_adam(weights, biases, gradients_B,gradients_W,eta, m_W,m_B,v_W,v_B, t,L,L2_lamb,beta1,beta2,epsilon)
-        elif learning_algorithm=='rmsprop':
-            output,post_act,pre_act=FeedForwardNetwork(weights,biases,L,mini_batch,activation)
-            gradients_W,gradients_B=BackPropogation(weights,L,post_act,pre_act,exp_y[:,i:i+batch_size],output,activation,loss)
-            weights,biases,previous_updates_W,previous_updates_B = rmsprop_params_update(weights, biases, gradients_B,gradients_W, beta,eta, previous_updates_W,previous_updates_B,L,L2_lamb)
-        else:
-            break;
-      full_output_train,_,_=FeedForwardNetwork(weights,biases,L,x_train,activation)
-      full_output_val,_,_=FeedForwardNetwork(weights,biases,L,x_val,activation)
-      loss_train=calc_loss(weights,full_output_train,exp_y,loss,full_output_train.shape[1],L2_lamb)
-      loss_val=calc_loss(weights,full_output_val,exp_y_val,loss,full_output_val.shape[1],L2_lamb)
-      acc_train.append(calc_accuracy(y_train,np.argmax(full_output_train,axis=0)))
-      acc_val.append(calc_accuracy(y_val,np.argmax(full_output_val,axis=0)))
-      epoch_train_loss.append(loss_train)
-      epoch_val_loss.append(loss_val)
-      count+=1
-  return weights,biases,epoch_train_loss,epoch_val_loss,acc_train,acc_val'''
 
 
 def learning_params(
@@ -502,29 +439,7 @@ def run_sweeps(train_x,train_y,val_x,val_y):
     sweep_id=wandb.sweep(config,project="DA6401_Assignment-1")
     wandb.agent(sweep_id,function=trainn,count=100)
 
-'''def log_confusion_mat():
-    wandb.init(project="DA6401_Assignment-1")
-    _,_,train_x,train_y,val_x,val_y,x_test,y_test=data_preprocess()
-    hidden_layers=6
-    weights,biases,epoch_train_loss,epoch_val_loss,acc_train,acc_val=learning_params(hidden_layers=6,neuron=64,x_train=train_x,y_train=train_y,x_val=val_x,y_val=val_y,learning_algorithm="nadam",eta=0.001,epochs=10,batch_size=32,activation="ReLU",init_method="xavier",L2_lamb=0.0005,momentum=0.9 ,beta=0.9 ,beta1=0.9 ,beta2=0.99 ,epsilon=0.00001)
-    L=hidden_layers+1
-    full_output_test,_,_=FeedForwardNetwork(weights,biases,L,x_test,"ReLU")
-    predicted_y=np.argmax(full_output_test,axis=0)
-    predicted_y=np.array(predicted_y,dtype=object)
-    acc_test=calc_accuracy(y_test,predicted_y)
-    pred_y=predicted_y
-    p_y=pred_y.tolist()
-    y_t=y_test.tolist()
-    conf= metrics.confusion_matrix(p_y,y_t)
-    cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = conf,display_labels=np.array(["T-shirt/top","Trouser","Pullover","Dress","Coat","Sandal","Shirt","Sneaker","Bag","Boot"]))
-    fig, ax = plt.subplots(figsize=(11,11))
-    cm_display.plot(ax=ax)
-    wandb.log({"confusion_matrix":plt})
-    wandb.run.name = "Confusion Matrix"
-    wandb.run.save()
-    wandb.run.finish()
-    return acc_test
-'''
+
 def log_confusion_mat():
     # Initialize Weights & Biases
     wandb.init(project="DA6401_Assignment-1")
