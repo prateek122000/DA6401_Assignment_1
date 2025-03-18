@@ -22,3 +22,4 @@ parser.add_argument('-sz','--hidden_size', default=64, required=False,metavar=""
 parser.add_argument('-a','--activation', default="ReLU", required=False,metavar="", type=str,choices= ["identity", "sigmoid", "tanh", "ReLU"], help=' ')
 args = parser.parse_args()
 _,_,train_x,train_y,val_x,val_y,x_test,y_test=data_preprocess(args.dataset)
+wandb_run_configuration(args.wandb_project,args.wandb_entity,args.num_layers,args.hidden_size,train_x,train_y,val_x,val_y,x_test,y_test,args.optimizer,args.learning_rate,args.epochs,args.batch_size,args.activation,args.weight_init,args.weight_decay,args.momentum ,args.beta ,args.beta1 ,args.beta2 ,args.epsilon,args.loss)
