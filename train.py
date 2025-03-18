@@ -1,8 +1,8 @@
 from NN import learning_params,data_preprocess,wandb_run_configuration
 import argparse
 parser = argparse.ArgumentParser(description='Run my model function')
-parser.add_argument('-wp','--wandb_project', default="CS6910_Assignment-1", required=False,metavar="", type=str, help=' ')
-parser.add_argument('-we','--wandb_entity', default="cs22m078", required=False,metavar="", type=str, help='')
+parser.add_argument('-wp','--wandb_project', default="DA6401_Assignment-1", required=False,metavar="", type=str, help=' ')
+parser.add_argument('-we','--wandb_entity', default="cs24m034", required=False,metavar="", type=str, help='')
 parser.add_argument('-d','--dataset', default="fashion_mnist", required=False,metavar="", type=str,choices= ["mnist", "fashion_mnist"], help=' ')
 parser.add_argument('-e','--epochs', default=10, required=False,metavar="", type=int, help=' ')
 parser.add_argument('-b','--batch_size', default=32, required=False,metavar="", type=int, help=' ')
