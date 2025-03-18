@@ -1,3 +1,4 @@
+''' Train.py DA6401_Assignment-1 '''
 from NN import learning_params,data_preprocess,wandb_run_configuration
 import argparse
 parser = argparse.ArgumentParser(description='Run my model function')
